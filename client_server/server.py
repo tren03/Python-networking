@@ -22,12 +22,18 @@ async def hello(websocket):
 
 
 async def messages(websocket,name):
-    while(True):
-        message = await websocket.recv()
-        print(f'Client sent : {message}')
-        if(message == 'exit'):
-            clients.remove(name)
-            break
+    try:
+        while(True):
+            message = await websocket.recv()
+            print(f'Client sent : {message}')
+            if(message == 'exit'):
+                clients.remove(name)
+                print(f'Client disconencted : {name}')
+                break
+    except websockets.exceptions.ConnectionClosedError:
+        clients.remove(name)
+        print(f'Client disconencted : {name}')
+
     
 
 
