@@ -21,13 +21,19 @@ async def hello(websocket):
     print(f'clients available {clients}')
 
 
-async def messages(websocket,name):
-    while(True):
-        message = await websocket.recv()
-        print(f'Client sent : {message}')
-        if(message == 'exit'):
-            clients.remove(name)
-            break
+async def messages(websocket, name):
+    try:
+        while True:
+            message = await websocket.recv()
+            print(f'Client {name} sent: {message}')
+            if message == 'exit':
+                clients.remove(name)
+                print(f'Client {name} disconnected.')
+                break
+    except websockets.exceptions.ConnectionClosedError:
+        clients.remove(name)
+        print(f'Client {name} disconnected.')
+
     
 
 
